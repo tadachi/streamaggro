@@ -1,12 +1,12 @@
 var express         = require('express');
-var bodyParser      = require('body-parser');
-var methodOverride  = require('method-override');
 var router          = express.Router();
 var vhost           = require('vhost');
 var app             = require('express.io')();
+var favicon         = require('serve-favicon');
 var port            = parseInt(process.env.PORT, 10) || 4000;
 
 var Client          = require('node-rest-client').Client;
+
 
 // Simple timestamp function. Invoke with timestamp();
 htimestamp = function() {
@@ -37,10 +37,7 @@ if (!String.prototype.format) {
 
 app.http().io();
 
-// Get data from a POST as well with bodyParser.
-app.use(bodyParser.urlencoded({ extended: true })); // parse application/x-www-form-urlencoded
-app.use(bodyParser.json()); // parse application/json
-app.use(methodOverride());
+app.use(favicon(__dirname + '/favicon.ico'));
 
 app.listen(port);
 
@@ -126,21 +123,12 @@ RestClient.prototype.getHitboxInfo = function (self, callback) {
 };
 
 restclient = new RestClient();
-
+restclient.update()
 
 // ROUTES --------------------------------------------
 router.get('/', function(req, res) {
-    res.send('hi')
+    res.send('index.html')
 });
-
-/*
-api.takbytes.com/dota
-api.takbytes.com/starcraft
-api.takbytes.com/speedruns
-api.takbytes.com/hearthstone
-api.takbytes.com/counterstrike
-api.takbytes.com/hitbox
-*/
 
 router.get('/dota', function(req, res) {
     res.send(restclient.data_store['dota']);

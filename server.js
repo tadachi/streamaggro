@@ -126,7 +126,7 @@ RestClient.prototype.getHitboxInfo = function (self, callback) {
 };
 
 restclient = new RestClient();
-restclient.update();
+
 
 // ROUTES --------------------------------------------
 router.get('/', function(req, res) {
@@ -176,3 +176,6 @@ app.use('/', router);
 console.log(__dirname);
 console.log('hostname: ' + hostname + ':' + port);
 console.log(htimestamp() + ' Listening on port: ' + port);
+
+/* Intervals */
+setInterval(function() {restclient.update()}, 150000)

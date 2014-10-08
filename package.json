@@ -8,6 +8,7 @@
         "router":"~0.6.2",
         "socket.io":"~1.1.0",
         "vhost":"~3.0.0",
-        "node-rest-client":"~1.0.0"
+        "node-rest-client":"~1.0.0",
+        "serve-favicon":"~2.1.5"
     }
 }

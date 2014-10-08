@@ -62,27 +62,27 @@ RestClient.prototype.update = function(self) {
     var self = this;
     this.getDotaInfo(self, 40, function(results) {
         self.data_store.dota = results;
-        console.log(htimestamp() + ' dota done.');
+        console.log(htimestamp() + ' dota cached.');
     });
     this.getStarcraftInfo(self, 40, function(results) {
         self.data_store.starcraft = results;
-        console.log(htimestamp() + ' starcraft done.');
+        console.log(htimestamp() + ' starcraft cached.');
     });
     this.getHearthstoneInfo(self, 40, function(results) {
         self.data_store.hearthstone = results;
-        console.log(htimestamp() + ' hearthstone done.');
+        console.log(htimestamp() + ' hearthstone cached.');
     });
     this.getCounterstrikeInfo(self, 40, function(results) {
         self.data_store.counterstrike = results;
-        console.log(htimestamp() + ' counterstrike done.');
+        console.log(htimestamp() + ' counterstrike cached.');
     });
     this.getSpeedrunsInfo(self, function(results) {
         self.data_store.speedruns = results;
-        console.log(htimestamp() + ' speedruns done.');
+        console.log(htimestamp() + ' speedruns cached.');
     });
     this.getHitboxInfo(self, function(results) {
         self.data_store.hitbox = results;
-        console.log(htimestamp() + ' hitbox done.');
+        console.log(htimestamp() + ' hitbox cached.');
     });
 }
 
@@ -127,7 +127,7 @@ restclient.update()
 
 // ROUTES --------------------------------------------
 router.get('/', function(req, res) {
-    res.send('index.html')
+    res.send(__dirname + 'index.html')
 });
 
 router.get('/dota', function(req, res) {

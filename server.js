@@ -3,7 +3,7 @@ var router          = express.Router();
 var vhost           = require('vhost');
 var app             = require('express.io')();
 var favicon         = require('serve-favicon');
-var port            = parseInt(process.env.PORT, 10) || 4000;
+var port            = parseInt(process.env.PORT, 10) || 6000;
 
 var Client          = require('node-rest-client').Client;
 
@@ -41,8 +41,8 @@ app.use(favicon(__dirname + '/favicon.ico'));
 
 app.listen(port);
 
-//var hostname = 'sa.tak.com'; // Dev.
-var hostname = 'api.takbytes.com'; // Prod.
+var hostname = 'sa.tak.com'; // Dev.
+//var hostname = 'api.takbytes.com'; // Prod.
 
 // REST CLIENT ---------------------------------------
 function RestClient() {
@@ -60,19 +60,19 @@ function RestClient() {
 
 RestClient.prototype.update = function(self) {
     var self = this;
-    this.getDotaInfo(self, 40, function(results) {
+    this.getDotaInfo(self, 60, function(results) {
         self.data_store.dota = results;
         console.log(htimestamp() + ' dota cached.');
     });
-    this.getStarcraftInfo(self, 40, function(results) {
+    this.getStarcraftInfo(self, 60, function(results) {
         self.data_store.starcraft = results;
         console.log(htimestamp() + ' starcraft cached.');
     });
-    this.getHearthstoneInfo(self, 40, function(results) {
+    this.getHearthstoneInfo(self, 60, function(results) {
         self.data_store.hearthstone = results;
         console.log(htimestamp() + ' hearthstone cached.');
     });
-    this.getCounterstrikeInfo(self, 40, function(results) {
+    this.getCounterstrikeInfo(self, 60, function(results) {
         self.data_store.counterstrike = results;
         console.log(htimestamp() + ' counterstrike cached.');
     });
@@ -92,6 +92,7 @@ RestClient.prototype.update = function(self) {
  * Output: http://twitch.tv/chat/embed?channel=cosmo&amp;popout_chat=true
  ***/
 RestClient.prototype.getDotaInfo = function(self, limit, callback) {
+    console.log('https://api.twitch.tv/kraken/search/streams?q=dota&limit={lim}'.format({lim: limit}))
     this.client.get('https://api.twitch.tv/kraken/search/streams?q=dota&limit={lim}'.format({lim: limit}), function(data, response){ // bandwidth-class: heavy, game: dota, sorted-by-most-viewers
         callback(data);
     });
@@ -127,7 +128,7 @@ restclient.update()
 
 // ROUTES --------------------------------------------
 router.get('/', function(req, res) {
-    res.send(__dirname + 'index.html')
+    res.sendfile(__dirname + '/index.html')
 });
 
 router.get('/dota', function(req, res) {

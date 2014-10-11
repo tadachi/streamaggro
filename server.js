@@ -3,10 +3,9 @@ var router          = express.Router();
 var vhost           = require('vhost');
 var app             = require('express.io')();
 var favicon         = require('serve-favicon');
-var port            = parseInt(process.env.PORT, 10) || 6000;
+var port            = parseInt(process.env.PORT, 10) || 4001;
 
 var Client          = require('node-rest-client').Client;
-
 
 // Simple timestamp function. Invoke with timestamp();
 htimestamp = function() {
@@ -41,8 +40,8 @@ app.use(favicon(__dirname + '/favicon.ico'));
 
 app.listen(port);
 
-var hostname = 'sa.tak.com'; // Dev.
-//var hostname = 'api.takbytes.com'; // Prod.
+//var hostname = 'sa.tak.com'; // Dev.
+var hostname = 'api.takbytes.com'; // Prod.
 
 // REST CLIENT ---------------------------------------
 function RestClient() {
@@ -92,7 +91,7 @@ RestClient.prototype.update = function(self) {
  * Output: http://twitch.tv/chat/embed?channel=cosmo&amp;popout_chat=true
  ***/
 RestClient.prototype.getDotaInfo = function(self, limit, callback) {
-    console.log('https://api.twitch.tv/kraken/search/streams?q=dota&limit={lim}'.format({lim: limit}))
+    //console.log('https://api.twitch.tv/kraken/search/streams?q=dota&limit={lim}'.format({lim: limit}))
     this.client.get('https://api.twitch.tv/kraken/search/streams?q=dota&limit={lim}'.format({lim: limit}), function(data, response){ // bandwidth-class: heavy, game: dota, sorted-by-most-viewers
         callback(data);
     });
@@ -119,7 +118,7 @@ RestClient.prototype.getSpeedrunsInfo = function (self, callback) {
 };
 RestClient.prototype.getHitboxInfo = function (self, callback) {
     this.client.get('http://hboxapi.herokuapp.com/', function (data, response) { // bandwidth-class: heavy, game: speedruns, sorted-by-most-viewers
-        callback(JSON.stringify(eval('('+data+')')));
+        callback(data)
     });
 };
 
@@ -127,6 +126,15 @@ restclient = new RestClient();
 restclient.update()
 
 // ROUTES --------------------------------------------
+
+/* Required so that the requests don't get blocked by CORS */
+router.all('*', function(req, res, next) {
+    res.header("Access-Control-Allow-Headers", "access-control-allow-origin");
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header('Access-Control-Allow-Methods', 'GET');
+    next();
+})
+
 router.get('/', function(req, res) {
     res.sendfile(__dirname + '/index.html')
 });

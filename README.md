@@ -18,3 +18,5 @@ api.takbytes.com/hearthstone
 api.takbytes.com/counterstrike
 
 api.takbytes.com/hitbox
+
+api.takbytes.com/azubu

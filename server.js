@@ -40,8 +40,8 @@ app.use(favicon(__dirname + '/favicon.ico'));
 
 app.listen(port);
 
-//var hostname = 'sa.tak.com'; // Dev.
-var hostname = 'api.takbytes.com'; // Prod.
+var hostname = 'sa.tak.com'; // Dev.
+//var hostname = 'api.takbytes.com'; // Prod.
 
 // REST CLIENT ---------------------------------------
 function RestClient() {
@@ -52,7 +52,8 @@ function RestClient() {
                         dota: null,
                         hitbox: null,
                         hearthstone: null,
-                        counterstrike: null
+                        counterstrike: null,
+                        azubu: null
                     };
     // console.log(this.data_store);
 }
@@ -82,6 +83,10 @@ RestClient.prototype.update = function(self) {
     this.getHitboxInfo(self, function(results) {
         self.data_store.hitbox = results;
         console.log(htimestamp() + ' hitbox cached.');
+    });
+    this.getAzubuInfo(self, function(results) {
+        self.data_store.azubu = results;
+        console.log(htimestamp() + ' azubu cached.');
     });
 }
 
@@ -121,6 +126,13 @@ RestClient.prototype.getHitboxInfo = function (self, callback) {
         callback(data)
     });
 };
+RestClient.prototype.getAzubuInfo = function (self, callback) {
+    this.client.get('http://liveleaguestream.com/json.php?method=getOnline', function (data, response) { // bandwidth-class: heavy, game: speedruns, sorted-by-most-viewers
+        matches = data.match(/\[(.*?)\]/); // Remove outside round brackets since liveleaguestream does not provide Valid JSON.
+        callback(matches)
+    });
+};
+
 
 restclient = new RestClient();
 restclient.update()
@@ -159,6 +171,9 @@ router.get('/counterstrike', function(req, res) {
 
 router.get('/hitbox', function(req, res) {
     res.send(restclient.data_store['hitbox'])
+});
+router.get('/azubu', function(req, res) {
+    res.send(restclient.data_store['azubu'])
 });
 
 // REGISTER OUR ROUTES -------------------------------

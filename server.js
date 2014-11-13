@@ -125,7 +125,7 @@ RestClient.prototype.getCounterstrikeInfo = function(self, limit, callback) {
     });;
 };
 RestClient.prototype.getSpeedrunsInfo = function (self, callback) {
-    this.client.get('http://api.speedrunslive.com/test/team', function(data, response){ // bandwidth-class: very-heavy, game: starcraft, sorted-by-most-viewers
+    this.client.get('http://api.speedrunslive.com/frontend/streams', function(data, response){ // bandwidth-class: very-heavy, game: starcraft, sorted-by-most-viewers
         callback(data);
     }).on('error',function(err){
         console.log('something went wrong on the request', err.request.options);

@@ -40,7 +40,7 @@ app.use(favicon(__dirname + '/favicon.ico'));
 
 app.listen(port);
 
-var hostname = 'sa.tak.com'; // Dev.
+var hostname = 'localhost'; // Dev.
 //var hostname = 'api.takbytes.com'; // Prod.
 
 // REST CLIENT ---------------------------------------
@@ -53,7 +53,8 @@ function RestClient() {
                         hitbox: null,
                         hearthstone: null,
                         counterstrike: null,
-                        azubu: null
+                        azubu: null,
+						leagueoflegends: null
                     };
     // console.log(this.data_store);
 }
@@ -88,6 +89,10 @@ RestClient.prototype.update = function(self) {
         self.data_store.azubu = results;
         console.log(htimestamp() + ' azubu cached.');
     });
+	this.getLeagueOfLegendsInfo(self, 60, function(results) {
+        self.data_store.leagueoflegends = results;
+        console.log(htimestamp() + ' leagueoflegends cached.');
+    });
 }
 
 /***
@@ -108,35 +113,35 @@ RestClient.prototype.getStarcraftInfo = function(self, limit, callback) {
         callback(data);
     }).on('error',function(err){
         console.log('something went wrong on the request', err.request.options);
-    });;
+    });
 };
 RestClient.prototype.getHearthstoneInfo = function(self, limit, callback) {
     this.client.get('https://api.twitch.tv/kraken/search/streams?q=hearthstone&limit={lim}'.format({lim: limit}), function(data, response){ // bandwidth-class: heavy, game: starcraft, sorted-by-most-viewers
         callback(data);
     }).on('error',function(err){
         console.log('something went wrong on the request', err.request.options);
-    });;
+    });
 };
 RestClient.prototype.getCounterstrikeInfo = function(self, limit, callback) {
     this.client.get('https://api.twitch.tv/kraken/search/streams?q=counter-strike&limit={lim}'.format({lim: limit}), function(data, response){ // bandwidth-class: heavy, game: starcraft, sorted-by-most-viewers
         callback(data);
     }).on('error',function(err){
         console.log('something went wrong on the request', err.request.options);
-    });;
+    });
 };
 RestClient.prototype.getSpeedrunsInfo = function (self, callback) {
     this.client.get('http://api.speedrunslive.com/frontend/streams', function(data, response){ // bandwidth-class: very-heavy, game: starcraft, sorted-by-most-viewers
         callback(data);
     }).on('error',function(err){
         console.log('something went wrong on the request', err.request.options);
-    });;
+    });
 };
 RestClient.prototype.getHitboxInfo = function (self, callback) {
     this.client.get('http://hboxapi.herokuapp.com/', function (data, response) { // bandwidth-class: heavy, game: speedruns, sorted-by-most-viewers
         callback(data)
     }).on('error',function(err){
         console.log('something went wrong on the request', err.request.options);
-    });;
+    });
 };
 RestClient.prototype.getAzubuInfo = function (self, callback) {
     this.client.get('http://liveleaguestream.com/json.php?method=getOnline', function (data, response) { // bandwidth-class: heavy, game: speedruns, sorted-by-most-viewers
@@ -144,7 +149,14 @@ RestClient.prototype.getAzubuInfo = function (self, callback) {
         callback(matches)
     }).on('error',function(err){
         console.log('something went wrong on the request', err.request.options);
-    });;
+    });
+};
+RestClient.prototype.getLeagueOfLegendsInfo = function(self, limit, callback) {
+    this.client.get('https://api.twitch.tv/kraken/search/streams?q=league&limit={lim}'.format({lim: limit}), function (data, response) { // bandwidth-class: heavy, game: starcraft, sorted-by-most-viewers
+        callback(data);
+    }).on('error',function(err){
+        console.log('something went wrong on the request', err.request.options);
+    });
 };
 
 restclient = new RestClient();
@@ -188,6 +200,9 @@ router.get('/hitbox', function(req, res) {
 
 router.get('/azubu', function(req, res) {
     res.send(restclient.data_store['azubu'])
+});
+router.get('/league', function(req, res) {
+    res.send(restclient.data_store['leagueoflegends'])
 });
 
 // REGISTER OUR ROUTES -------------------------------

@@ -19,4 +19,6 @@ api.takbytes.com/counterstrike
 
 api.takbytes.com/hitbox
 
-api.takbytes.com/azubu
+api.takbytes.com/heroes
+
+

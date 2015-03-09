@@ -54,7 +54,8 @@ function RestClient() {
                         hearthstone: null,
                         counterstrike: null,
                         azubu: null,
-						leagueoflegends: null
+						leagueoflegends: null,
+                        heroes: null
                     };
     // console.log(this.data_store);
 }
@@ -93,6 +94,11 @@ RestClient.prototype.update = function(self) {
         self.data_store.leagueoflegends = results;
         console.log(htimestamp() + ' leagueoflegends cached.');
     });
+    this.getHeroesInfo(self, 60, function(results) {
+        self.data_store.heroes = results;
+        console.log(htimestamp() + ' heroesofthestorm cached.');
+    });
+
 }
 
 /***
@@ -105,42 +111,42 @@ RestClient.prototype.getDotaInfo = function(self, limit, callback) {
     this.client.get('https://api.twitch.tv/kraken/search/streams?q=dota&limit={lim}'.format({lim: limit}), function(data, response){ // bandwidth-class: heavy, game: dota, sorted-by-most-viewers
         callback(data);
     }).on('error',function(err){
-        console.log('something went wrong on the request', err.request.options);
+        console.log('something went wrong with the request', err.request.options);
     });
 }
 RestClient.prototype.getStarcraftInfo = function(self, limit, callback) {
     this.client.get('https://api.twitch.tv/kraken/search/streams?q=starcraft&limit={lim}'.format({lim: limit}), function(data, response){ // bandwidth-class: heavy, game: starcraft, sorted-by-most-viewers
         callback(data);
     }).on('error',function(err){
-        console.log('something went wrong on the request', err.request.options);
+        console.log('something went wrong with the request', err.request.options);
     });
 };
 RestClient.prototype.getHearthstoneInfo = function(self, limit, callback) {
     this.client.get('https://api.twitch.tv/kraken/search/streams?q=hearthstone&limit={lim}'.format({lim: limit}), function(data, response){ // bandwidth-class: heavy, game: starcraft, sorted-by-most-viewers
         callback(data);
     }).on('error',function(err){
-        console.log('something went wrong on the request', err.request.options);
+        console.log('something went wrong with the request', err.request.options);
     });
 };
 RestClient.prototype.getCounterstrikeInfo = function(self, limit, callback) {
     this.client.get('https://api.twitch.tv/kraken/search/streams?q=counter-strike&limit={lim}'.format({lim: limit}), function(data, response){ // bandwidth-class: heavy, game: starcraft, sorted-by-most-viewers
         callback(data);
     }).on('error',function(err){
-        console.log('something went wrong on the request', err.request.options);
+        console.log('something went wrong with the request', err.request.options);
     });
 };
 RestClient.prototype.getSpeedrunsInfo = function (self, callback) {
     this.client.get('http://api.speedrunslive.com/frontend/streams', function(data, response){ // bandwidth-class: very-heavy, game: starcraft, sorted-by-most-viewers
         callback(data);
     }).on('error',function(err){
-        console.log('something went wrong on the request', err.request.options);
+        console.log('something went wrong with the request', err.request.options);
     });
 };
 RestClient.prototype.getHitboxInfo = function (self, callback) {
     this.client.get('http://hboxapi.herokuapp.com/', function (data, response) { // bandwidth-class: heavy, game: speedruns, sorted-by-most-viewers
         callback(data)
     }).on('error',function(err){
-        console.log('something went wrong on the request', err.request.options);
+        console.log('something went wrong with the request', err.request.options);
     });
 };
 RestClient.prototype.getAzubuInfo = function (self, callback) {
@@ -148,14 +154,21 @@ RestClient.prototype.getAzubuInfo = function (self, callback) {
         matches = data.match(/\[(.*?)\]/); // Remove outside round brackets since liveleaguestream does not provide Valid JSON.
         callback(matches)
     }).on('error',function(err){
-        console.log('something went wrong on the request', err.request.options);
+        console.log('something went wrong with the request', err.request.options);
     });
 };
 RestClient.prototype.getLeagueOfLegendsInfo = function(self, limit, callback) {
     this.client.get('https://api.twitch.tv/kraken/search/streams?q=league&limit={lim}'.format({lim: limit}), function (data, response) { // bandwidth-class: heavy, game: starcraft, sorted-by-most-viewers
         callback(data);
     }).on('error',function(err){
-        console.log('something went wrong on the request', err.request.options);
+        console.log('something went wrong with the request', err.request.options);
+    });
+};
+RestClient.prototype.getHeroesInfo = function(self, limit, callback) {
+    this.client.get('https://api.twitch.tv/kraken/search/streams?q=heroes&limit={lim}'.format({lim: limit}), function (data, response) { // bandwidth-class: heavy, game: starcraft, sorted-by-most-viewers
+        callback(data);
+    }).on('error',function(err){
+        console.log('something went wrong with the request', err.request.options);
     });
 };
 
@@ -203,6 +216,9 @@ router.get('/azubu', function(req, res) {
 });
 router.get('/league', function(req, res) {
     res.send(restclient.data_store['leagueoflegends'])
+});
+router.get('/heroes', function(req, res) {
+    res.send(restclient.data_store['heroes'])
 });
 
 // REGISTER OUR ROUTES -------------------------------

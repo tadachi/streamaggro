@@ -165,7 +165,7 @@ RestClient.prototype.getLeagueOfLegendsInfo = function(self, limit, callback) {
     });
 };
 RestClient.prototype.getHeroesInfo = function(self, limit, callback) {
-    this.client.get('https://api.twitch.tv/kraken/search/streams?q=heroes&limit={lim}'.format({lim: limit}), function (data, response) { // bandwidth-class: heavy, game: starcraft, sorted-by-most-viewers
+    this.client.get('https://api.twitch.tv/kraken/search/streams?q=Heroes%20of%20the%20Storm&limit={lim}'.format({lim: limit}), function (data, response) { // bandwidth-class: heavy, game: starcraft, sorted-by-most-viewers
         callback(data);
     }).on('error',function(err){
         console.log('something went wrong with the request', err.request.options);

@@ -55,7 +55,8 @@ function RestClient() {
                         counterstrike: null,
                         azubu: null,
 						leagueoflegends: null,
-                        heroes: null
+                        heroes: null,
+                        diablo: null
                     };
     // console.log(this.data_store);
 }
@@ -97,6 +98,10 @@ RestClient.prototype.update = function(self) {
     this.getHeroesInfo(self, 60, function(results) {
         self.data_store.heroes = results;
         console.log(htimestamp() + ' heroesofthestorm cached.');
+    });
+    this.getDiabloInfo(self, 60, function(results) {
+        self.data_store.diablo = results;
+        console.log(htimestamp() + ' diablo cached.');
     });
 
 }
@@ -171,6 +176,13 @@ RestClient.prototype.getHeroesInfo = function(self, limit, callback) {
         console.log('something went wrong with the request', err.request.options);
     });
 };
+RestClient.prototype.getDiabloInfo = function(self, limit, callback) {
+    this.client.get('https://api.twitch.tv/kraken/search/streams?q=Diablo%20of%20the%20Storm&limit={lim}'.format({lim: limit}), function (data, response) { // bandwidth-class: heavy, game: starcraft, sorted-by-most-viewers
+        callback(data);
+    }).on('error',function(err){
+        console.log('something went wrong with the request', err.request.options);
+    });
+};
 
 restclient = new RestClient();
 restclient.update()
@@ -219,6 +231,9 @@ router.get('/league', function(req, res) {
 });
 router.get('/heroes', function(req, res) {
     res.send(restclient.data_store['heroes'])
+});
+router.get('/diablo', function(req, res) {
+    res.send(restclient.data_store['diablo'])
 });
 
 // REGISTER OUR ROUTES -------------------------------

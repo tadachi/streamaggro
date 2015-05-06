@@ -24,5 +24,3 @@ https://api.takbytes.com/league
 https://api.takbytes.com/heroes
 
 https://api.takbytes.com/diablo
-
-

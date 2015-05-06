@@ -3,8 +3,8 @@ var router          = express.Router();
 var vhost           = require('vhost');
 var app             = require('express.io')();
 var favicon         = require('serve-favicon');
-//var port            = parseInt(process.env.PORT, 10) || 4001;
-var httpsPort            = parseInt(process.env.PORT, 10) || 4001;
+var port            = parseInt(process.env.PORT, 10) || 4001;
+//var httpsPort            = parseInt(process.env.PORT, 10) || 4001;
 
 var Client          = require('node-rest-client').Client;
 
@@ -14,15 +14,14 @@ var https           = require('https');
 // SSL stuff. Do git commit paths to your actual keys. Edit the paths after cloning.
 //var privateKey  = fs.readFileSync('YOUR PATH', 'utf8');
 //var certificate = fs.readFileSync('YOUR PATH', 'utf8');
-
-var options = {key: privateKey, cert: certificate};
+//var options = {key: privateKey, cert: certificate};
 
 // Simple timestamp function. Invoke with timestamp();
 htimestamp = function() {
     var date = new Date();
     result = '[' + date.getFullYear() + '/' + date.getMonth() + '/' +
-        date.getDate() + '/' + date.getHours() + ':' +
-        date.getMinutes() + ':' + date.getSeconds() + ']';
+    date.getDate() + '/' + date.getHours() + ':' +
+    date.getMinutes() + ':' + date.getSeconds() + ']';
     return result;
 }
 
@@ -49,15 +48,16 @@ if (!String.prototype.format) {
 /**
  *  Configure the HTTPS webServer. and launch it.
  */
-var httpsServer  = https.createServer(options, app).listen(httpsPort, function() {
-    //debug('Express webServer listening on httpPort ' + webServer.address().httpPort);
-    console.log(__dirname);
-    console.log('Listening on port: ' + httpsPort);
-    console.log('node -v: ' + process.versions.node);
-});
+//var httpsServer  = https.createServer(options, app).listen(httpsPort, function() {
+//    //debug('Express webServer listening on port ' + webServer.address().httpPort);
+//    console.log(__dirname);
+//    console.log('Listening on port: ' + httpsPort);
+//    console.log('node -v: ' + process.versions.node);
+//});
 
 app.http().io();
 app.use(favicon(__dirname + '/favicon.ico'));
+app.listen(port);
 
 var hostname = 'localhost'; // Dev.
 //var hostname = 'api.takbytes.com'; // Prod.
@@ -66,17 +66,17 @@ var hostname = 'localhost'; // Dev.
 function RestClient() {
     this.client = new Client();
     this.data_store = {
-                        starcraft: null,
-                        speedruns: null,
-                        dota: null,
-                        hitbox: null,
-                        hearthstone: null,
-                        counterstrike: null,
-                        azubu: null,
-						leagueoflegends: null,
-                        heroes: null,
-                        diablo: null
-                    };
+        starcraft: null,
+        speedruns: null,
+        dota: null,
+        hitbox: null,
+        hearthstone: null,
+        counterstrike: null,
+        azubu: null,
+        leagueoflegends: null,
+        heroes: null,
+        diablo: null
+    };
     // console.log(this.data_store);
 }
 
@@ -110,7 +110,7 @@ RestClient.prototype.update = function(self) {
         self.data_store.azubu = results;
         console.log(htimestamp() + ' azubu cached.');
     });
-	this.getLeagueOfLegendsInfo(self, 60, function(results) {
+    this.getLeagueOfLegendsInfo(self, 60, function(results) {
         self.data_store.leagueoflegends = results;
         console.log(htimestamp() + ' leagueoflegends cached.');
     });
@@ -259,9 +259,9 @@ router.get('/diablo', function(req, res) {
 app.use('/', router);
 
 /* Outputs the users' ips visiting your website*/
-// app.io.route('page', function (req) {
+//app.io.route('page', function (req) {
 //     console.log(htimestamp() + ' ' + req.ip);
-// });
+//});
 
 /* Intervals */
 setInterval(function() {restclient.update()}, 150000)

@@ -7,22 +7,22 @@ It will update with the latest online streams every 3-5 minutes in order to avoi
 
 api calls:
 
-api.takbytes.com/dota
+https://api.takbytes.com/dota
 
-api.takbytes.com/starcraft
+https://api.takbytes.com/starcraft
 
-api.takbytes.com/speedruns
+https://api.takbytes.com/speedruns
 
-api.takbytes.com/hearthstone
+https://api.takbytes.com/hearthstone
 
-api.takbytes.com/counterstrike
+https://api.takbytes.com/counterstrike
 
-api.takbytes.com/hitbox
+https://api.takbytes.com/hitbox
 
-api.takbytes.com/league
+https://api.takbytes.com/league
 
-api.takbytes.com/heroes
+https://api.takbytes.com/heroes
 
-api.takbytes.com/diablo
+https://api.takbytes.com/diablo
 
 

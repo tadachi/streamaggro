@@ -14,8 +14,6 @@ var https           = require('https');
 // SSL stuff. Do git commit paths to your actual keys. Edit the paths after cloning.
 //var privateKey  = fs.readFileSync('YOUR PATH', 'utf8');
 //var certificate = fs.readFileSync('YOUR PATH', 'utf8');
-var privateKey  = fs.readFileSync('ssl-dec.key', 'utf8');
-var certificate = fs.readFileSync('ssl-unified.crt', 'utf8');
 
 var options = {key: privateKey, cert: certificate};
 
@@ -54,7 +52,7 @@ if (!String.prototype.format) {
 var httpsServer  = https.createServer(options, app).listen(httpsPort, function() {
     //debug('Express webServer listening on httpPort ' + webServer.address().httpPort);
     console.log(__dirname);
-    console.log('Listening on httpPort: ' + httpsPort);
+    console.log('Listening on port: ' + httpsPort);
     console.log('node -v: ' + process.versions.node);
 });
 
@@ -264,11 +262,6 @@ app.use('/', router);
 // app.io.route('page', function (req) {
 //     console.log(htimestamp() + ' ' + req.ip);
 // });
-
-/* Debug */
-console.log(__dirname);
-console.log('hostname: ' + hostname + ':' + httpsPort);
-console.log(htimestamp() + ' Listening on port: ' + httpsPort);
 
 /* Intervals */
 setInterval(function() {restclient.update()}, 150000)

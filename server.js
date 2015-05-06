@@ -3,9 +3,21 @@ var router          = express.Router();
 var vhost           = require('vhost');
 var app             = require('express.io')();
 var favicon         = require('serve-favicon');
-var port            = parseInt(process.env.PORT, 10) || 4001;
+//var port            = parseInt(process.env.PORT, 10) || 4001;
+var httpsPort            = parseInt(process.env.PORT, 10) || 4001;
 
 var Client          = require('node-rest-client').Client;
+
+var fs              = require('fs');
+var https           = require('https');
+
+// SSL stuff. Do git commit paths to your actual keys. Edit the paths after cloning.
+//var privateKey  = fs.readFileSync('YOUR PATH', 'utf8');
+//var certificate = fs.readFileSync('YOUR PATH', 'utf8');
+var privateKey  = fs.readFileSync('ssl-dec.key', 'utf8');
+var certificate = fs.readFileSync('ssl-unified.crt', 'utf8');
+
+var options = {key: privateKey, cert: certificate};
 
 // Simple timestamp function. Invoke with timestamp();
 htimestamp = function() {
@@ -34,11 +46,20 @@ if (!String.prototype.format) {
     }
 }
 
+
+
+/**
+ *  Configure the HTTPS webServer. and launch it.
+ */
+var httpsServer  = https.createServer(options, app).listen(httpsPort, function() {
+    //debug('Express webServer listening on httpPort ' + webServer.address().httpPort);
+    console.log(__dirname);
+    console.log('Listening on httpPort: ' + httpsPort);
+    console.log('node -v: ' + process.versions.node);
+});
+
 app.http().io();
-
 app.use(favicon(__dirname + '/favicon.ico'));
-
-app.listen(port);
 
 var hostname = 'localhost'; // Dev.
 //var hostname = 'api.takbytes.com'; // Prod.
@@ -246,8 +267,8 @@ app.use('/', router);
 
 /* Debug */
 console.log(__dirname);
-console.log('hostname: ' + hostname + ':' + port);
-console.log(htimestamp() + ' Listening on port: ' + port);
+console.log('hostname: ' + hostname + ':' + httpsPort);
+console.log(htimestamp() + ' Listening on port: ' + httpsPort);
 
 /* Intervals */
 setInterval(function() {restclient.update()}, 150000)

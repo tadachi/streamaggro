@@ -4,17 +4,8 @@ var vhost           = require('vhost');
 var app             = require('express.io')();
 var favicon         = require('serve-favicon');
 var port            = parseInt(process.env.PORT, 10) || 4001;
-//var httpsPort            = parseInt(process.env.PORT, 10) || 4001;
 
 var Client          = require('node-rest-client').Client;
-
-var fs              = require('fs');
-var https           = require('https');
-
-// SSL stuff. Do git commit paths to your actual keys. Edit the paths after cloning.
-//var privateKey  = fs.readFileSync('YOUR PATH', 'utf8');
-//var certificate = fs.readFileSync('YOUR PATH', 'utf8');
-//var options = {key: privateKey, cert: certificate};
 
 // Simple timestamp function. Invoke with timestamp();
 htimestamp = function() {
@@ -43,24 +34,14 @@ if (!String.prototype.format) {
     }
 }
 
-
-
-/**
- *  Configure the HTTPS webServer. and launch it.
- */
-//var httpsServer  = https.createServer(options, app).listen(httpsPort, function() {
-//    //debug('Express webServer listening on port ' + webServer.address().httpPort);
-//    console.log(__dirname);
-//    console.log('Listening on port: ' + httpsPort);
-//    console.log('node -v: ' + process.versions.node);
-//});
-
 app.http().io();
 app.use(favicon(__dirname + '/favicon.ico'));
 app.listen(port);
 
-var hostname = 'localhost'; // Dev.
-//var hostname = 'api.takbytes.com'; // Prod.
+// var hostname = 'localhost'; // Dev.
+var hostname = 'api.takbytes.com'; // Prod.
+
+
 
 // REST CLIENT ---------------------------------------
 function RestClient() {
@@ -79,6 +60,10 @@ function RestClient() {
     };
     // console.log(this.data_store);
 }
+
+var args = {
+    headers: { 'Client-ID': 'f55txr3qf7w1bxsjqszl1u2fqmlbk4l' } // request headers
+};
 
 RestClient.prototype.update = function(self) {
     var self = this;
@@ -125,6 +110,8 @@ RestClient.prototype.update = function(self) {
 
 }
 
+
+
 /***
  * Similar to what you find in Java's format.
  * Usage: chatsrc = 'http://twitch.tv/chat/embed?channel={channel}&amp;popout_chat=true'.format({ channel: 'cosmo'});
@@ -132,28 +119,28 @@ RestClient.prototype.update = function(self) {
  ***/
 RestClient.prototype.getDotaInfo = function(self, limit, callback) {
     //console.log('https://api.twitch.tv/kraken/search/streams?q=dota&limit={lim}'.format({lim: limit}))
-    this.client.get('https://api.twitch.tv/kraken/search/streams?q=dota&limit={lim}'.format({lim: limit}), function(data, response){ // bandwidth-class: heavy, game: dota, sorted-by-most-viewers
+    this.client.get('https://api.twitch.tv/kraken/search/streams?q=dota&limit={lim}'.format({lim: limit}), args, function(data, response){ // bandwidth-class: heavy, game: dota, sorted-by-most-viewers
         callback(data);
     }).on('error',function(err){
         console.log('something went wrong with the request', err.request.options);
     });
 }
 RestClient.prototype.getStarcraftInfo = function(self, limit, callback) {
-    this.client.get('https://api.twitch.tv/kraken/search/streams?q=starcraft&limit={lim}'.format({lim: limit}), function(data, response){ // bandwidth-class: heavy, game: starcraft, sorted-by-most-viewers
+    this.client.get('https://api.twitch.tv/kraken/search/streams?q=starcraft&limit={lim}'.format({lim: limit}), args, function(data, response){ // bandwidth-class: heavy, game: starcraft, sorted-by-most-viewers
         callback(data);
     }).on('error',function(err){
         console.log('something went wrong with the request', err.request.options);
     });
 };
 RestClient.prototype.getHearthstoneInfo = function(self, limit, callback) {
-    this.client.get('https://api.twitch.tv/kraken/search/streams?q=hearthstone&limit={lim}'.format({lim: limit}), function(data, response){ // bandwidth-class: heavy, game: starcraft, sorted-by-most-viewers
+    this.client.get('https://api.twitch.tv/kraken/search/streams?q=hearthstone&limit={lim}'.format({lim: limit}), args, function(data, response){ // bandwidth-class: heavy, game: starcraft, sorted-by-most-viewers
         callback(data);
     }).on('error',function(err){
         console.log('something went wrong with the request', err.request.options);
     });
 };
 RestClient.prototype.getCounterstrikeInfo = function(self, limit, callback) {
-    this.client.get('https://api.twitch.tv/kraken/search/streams?q=counter-strike&limit={lim}'.format({lim: limit}), function(data, response){ // bandwidth-class: heavy, game: starcraft, sorted-by-most-viewers
+    this.client.get('https://api.twitch.tv/kraken/search/streams?q=counter-strike&limit={lim}'.format({lim: limit}), args, function(data, response){ // bandwidth-class: heavy, game: starcraft, sorted-by-most-viewers
         callback(data);
     }).on('error',function(err){
         console.log('something went wrong with the request', err.request.options);
@@ -182,21 +169,21 @@ RestClient.prototype.getAzubuInfo = function (self, callback) {
     });
 };
 RestClient.prototype.getLeagueOfLegendsInfo = function(self, limit, callback) {
-    this.client.get('https://api.twitch.tv/kraken/search/streams?q=league&limit={lim}'.format({lim: limit}), function (data, response) { // bandwidth-class: heavy, game: starcraft, sorted-by-most-viewers
+    this.client.get('https://api.twitch.tv/kraken/search/streams?q=league&limit={lim}'.format({lim: limit}), args, function (data, response) { // bandwidth-class: heavy, game: starcraft, sorted-by-most-viewers
         callback(data);
     }).on('error',function(err){
         console.log('something went wrong with the request', err.request.options);
     });
 };
 RestClient.prototype.getHeroesInfo = function(self, limit, callback) {
-    this.client.get('https://api.twitch.tv/kraken/search/streams?q=Heroes%20of%20the%20Storm&limit={lim}'.format({lim: limit}), function (data, response) { // bandwidth-class: heavy, game: starcraft, sorted-by-most-viewers
+    this.client.get('https://api.twitch.tv/kraken/search/streams?q=Heroes%20of%20the%20Storm&limit={lim}'.format({lim: limit}), args, function (data, response) { // bandwidth-class: heavy, game: starcraft, sorted-by-most-viewers
         callback(data);
     }).on('error',function(err){
         console.log('something went wrong with the request', err.request.options);
     });
 };
 RestClient.prototype.getDiabloInfo = function(self, limit, callback) {
-    this.client.get('https://api.twitch.tv/kraken/search/streams?q=Diablo&limit={lim}'.format({lim: limit}), function (data, response) { // bandwidth-class: heavy, game: starcraft, sorted-by-most-viewers
+    this.client.get('https://api.twitch.tv/kraken/search/streams?q=Diablo&limit={lim}'.format({lim: limit}), args, function (data, response) { // bandwidth-class: heavy, game: starcraft, sorted-by-most-viewers
         callback(data);
     }).on('error',function(err){
         console.log('something went wrong with the request', err.request.options);
